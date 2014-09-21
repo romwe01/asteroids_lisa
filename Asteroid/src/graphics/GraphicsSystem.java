@@ -3,7 +3,7 @@ package graphics;
 import java.awt.Graphics2D;
 
 import core.Core;
-import io.InputManager;
+import input.InputManager;
 
 public class GraphicsSystem {
 
@@ -39,10 +39,10 @@ public class GraphicsSystem {
 		//clear background
 		g.clearRect(-width/2, -height/2, width, height);
 		
-		core.updateManager.UpdateAll();
+		core.updateManager.UpdateAll();						//liefert noch NULLPOINTEREXCEPTION weil nix in der liste steht
 		//update all the entities
-		core.entityManager.updateAllEntities();
-		core.entityManager.updateAllEntities(g);
+		//core.entityManager.updateAllEntities();
+		//core.entityManager.updateAllEntities(g);
 		
 		renderSystem.endUpdate();
 	}
