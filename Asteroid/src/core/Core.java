@@ -1,26 +1,23 @@
 package core;
 
-import java.awt.event.KeyEvent;
-
-import entities.Entity;
-import enumeration.Enumerations;
-//import events.EventManager;
-import events.GameEvent;
-import events.KeyPressedEvent;
-import events.KeyPressedListener;
 import graphics.GraphicsConfig;
 import graphics.GraphicsSystem;
 import input.InputManager;
-import update.UpdateManager;
+
+import java.awt.event.KeyEvent;
+
+import events.KeyPressedEvent;
+import events.KeyPressedListener;
+import events.EventManager;
+
 
 public class Core implements KeyPressedListener{
 
 	public InputManager inputManager;
-	//public EventManager eventManager;
+	public EventManager eventManager;
 	//public EntityManager entityManager;
 	public GraphicsSystem graphicsSystem;
 	public GraphicsConfig graphicsConfig;
-	public UpdateManager updateManager;
 	
 	private float dt;
 	private boolean runLoop = true;
@@ -30,9 +27,8 @@ public class Core implements KeyPressedListener{
 	public Core (GraphicsConfig graphicsConfig){
 		//entityManager = new EntityManager(this);
 		inputManager = new InputManager(this);
-		//eventManager = new EventManager();
+		eventManager = new EventManager();
 		graphicsSystem = new GraphicsSystem(this);
-		//updateManager = new UpdateManager();
 		this.graphicsConfig = graphicsConfig;
 		setGraphicsConfiguration(graphicsConfig);
 		graphicsSystem.addInputManager(inputManager);
@@ -62,7 +58,7 @@ public class Core implements KeyPressedListener{
 	}
 	
 	public void requestUpdate(){
-		//eventManager.handleEvents();
+		eventManager.handleEvents();
 		graphicsSystem.render();
 	}
 	
@@ -84,13 +80,13 @@ public class Core implements KeyPressedListener{
 	@Override
 	public void setUp() {
 		// TODO Auto-generated method stub
-		//eventManager.addListener(this, "KeyPressed");
+		eventManager.addListener(this, "KeyPressed");
 	}
 
 	@Override
 	public void tearDown() {
 		// TODO Auto-generated method stub
-		//eventManager.removeListener(this);
+		eventManager.removeListener(this);
 		closeWindow();
 	}
 
@@ -98,6 +94,7 @@ public class Core implements KeyPressedListener{
 	public void onKeyPressed(KeyPressedEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
+			System.out.println("Beenden");
 			runLoop = false;
 		}
 	}

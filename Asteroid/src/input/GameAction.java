@@ -60,7 +60,7 @@ public class GameAction {
 		state = STATE_RELEASED;
 	}
 	
-	//signals whether pressed key or not
+	//signals whether key pressed or not
 	public synchronized boolean isPressed(){
 		return (getAmount() != 0);
 	}

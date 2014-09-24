@@ -23,7 +23,7 @@ public class InputManager implements KeyListener{
 			if (keyActions[e.getKeyCode()] != null){
 				keyActions[e.getKeyCode()].press();
 			}
-			//core.eventManager.addEvent(new KeyPressedEvent(e.getKeyCode()));			
+			core.eventManager.addEvent(new KeyPressedEvent(e.getKeyCode()));			
 		}
 		e.consume();
 	}

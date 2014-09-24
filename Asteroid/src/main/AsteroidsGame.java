@@ -1,11 +1,7 @@
 package main;
 
-import core.Core;
-import entities.Entity;
-import enumeration.Enumerations;
 import graphics.GraphicsConfig;
-import graphics.RenderLayer;
-import time.Time;
+import core.Core;
 
 public class AsteroidsGame {
 
@@ -22,11 +18,6 @@ public class AsteroidsGame {
 		// TODO Auto-generated method stub
 
 		c = new Core(new GraphicsConfig(defaultWidth, defaultHeight, 60, FULLSCREEN));
-		
-		//Entity player
-		//Entity asteroids
-		
-		//add to entityManager
 		
 		
 		while (c.getRunLoop() != false){

@@ -64,7 +64,6 @@ public class Fullscreen implements Screen{
 
 	@Override
 	public void endUpdate() {
-		// TODO Auto-generated method stub
 		drawGraphics.dispose();
 		bufferStrategy.show();
 		Toolkit.getDefaultToolkit().sync();
