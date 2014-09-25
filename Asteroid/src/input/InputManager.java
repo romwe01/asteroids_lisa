@@ -18,12 +18,11 @@ public class InputManager implements KeyListener{
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
 		if (e.getKeyCode() >= 0 && e.getKeyCode() < 256){
 			if (keyActions[e.getKeyCode()] != null){
 				keyActions[e.getKeyCode()].press();
 			}
-			//core.eventManager.addEvent(new KeyPressedEvent(e.getKeyCode()));			
+			core.eventManager.addEvent(new KeyPressedEvent(e.getKeyCode()));			
 		}
 		e.consume();
 	}
@@ -31,7 +30,6 @@ public class InputManager implements KeyListener{
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
 		if (e.getKeyCode() >= 0 && e.getKeyCode() < 256){
 			if (keyActions[e.getKeyCode()] != null)
 				keyActions[e.getKeyCode()].release();
@@ -41,7 +39,6 @@ public class InputManager implements KeyListener{
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
 		e.consume();
 	}
 	

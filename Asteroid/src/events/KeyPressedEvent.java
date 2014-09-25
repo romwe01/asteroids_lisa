@@ -16,13 +16,11 @@ public class KeyPressedEvent extends Event {
 	
 	@Override
 	public String getType() {
-		// TODO Auto-generated method stub
 		return TYPE;
 	}
 
 	@Override
 	public void processEvent(EventListener listener) {
-		// TODO Auto-generated method stub
 		if (listener instanceof KeyPressedListener){
 			((KeyPressedListener)listener).onKeyPressed(this);
 		}

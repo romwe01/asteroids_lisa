@@ -5,18 +5,22 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import core.Core;
-import graphics.RenderLayer;
 
 public abstract class Entity {
+	protected Vector2D position;
+	protected ArrayList<Vector2D> vertices = new ArrayList<Vector2D>();
+	protected ArrayList<Vector2D> verticesTrans = new ArrayList<Vector2D>();
+	protected Vector2D velocity = new Vector2D(0,0);
+	protected float angle = 180f;
+	protected Vector2D scale = new Vector2D(2,2);
 	
 	private String name;
 	protected Core core;
 	private int renderLayer;
 
 	
-	public Entity(String name, Core core, float x, float y, float radius){
+	public Entity(String name, Core core, double d, double e){
 		
-		this.renderLayer = RenderLayer.BACKGROUND;
 		this.name = name;
 		this.core = core;
 	}

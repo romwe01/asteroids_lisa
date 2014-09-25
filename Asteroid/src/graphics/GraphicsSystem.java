@@ -43,6 +43,7 @@ public class GraphicsSystem {
 		//update all the entities
 		//core.entityManager.updateAllEntities();
 		core.entityManager.updateAllEntities(g);
+		
 		renderSystem.endUpdate();
 	}
 	

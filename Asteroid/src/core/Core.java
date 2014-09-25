@@ -1,39 +1,41 @@
 package core;
 
+import graphics.GraphicsConfig;
+import graphics.GraphicsSystem;
+import input.InputManager;
+
 import java.awt.event.KeyEvent;
 
 import entities.Entity;
 import entities.EntityManager;
-import enumeration.Enumerations;
+import events.EventManager;
 //import events.EventManager;
-import events.GameEvent;
 import events.KeyPressedEvent;
 import events.KeyPressedListener;
-import graphics.GraphicsConfig;
-import graphics.GraphicsSystem;
-import input.InputManager;
-import update.UpdateManager;
+
 
 public class Core implements KeyPressedListener{
 
 	public InputManager inputManager;
 	//public EventManager eventManager;
 	public EntityManager entityManager;
+	public EventManager eventManager;
+	//public EntityManager entityManager;
 	public GraphicsSystem graphicsSystem;
 	public GraphicsConfig graphicsConfig;
-	public UpdateManager updateManager;
 	
+	// delta time
 	private float dt;
 	private boolean runLoop = true;
+	private boolean isPaused = false;
 	
 	public boolean isDebug = true;
 	
 	public Core (GraphicsConfig graphicsConfig){
 		entityManager = new EntityManager();
 		inputManager = new InputManager(this);
-		//eventManager = new EventManager();
+		eventManager = new EventManager();
 		graphicsSystem = new GraphicsSystem(this);
-		//updateManager = new UpdateManager();
 		this.graphicsConfig = graphicsConfig;
 		setGraphicsConfiguration(graphicsConfig);
 		graphicsSystem.addInputManager(inputManager);
@@ -63,7 +65,7 @@ public class Core implements KeyPressedListener{
 	}
 	
 	public void requestUpdate(){
-		//eventManager.handleEvents();
+		eventManager.handleEvents();
 		graphicsSystem.render();
 	}
 	
@@ -78,28 +80,32 @@ public class Core implements KeyPressedListener{
 	
 	@Override
 	public String getType() {
-		// TODO Auto-generated method stub
-		return null;
+		return EventType.KEY.name();
 	}
 
 	@Override
 	public void setUp() {
-		// TODO Auto-generated method stub
-		//eventManager.addListener(this, "KeyPressed");
+		eventManager.addListener(this, getType());
+		eventManager.addListener(entityManager, getType());
 	}
 
 	@Override
 	public void tearDown() {
-		// TODO Auto-generated method stub
-		//eventManager.removeListener(this);
+		eventManager.removeListener(this);
+		eventManager.removeListener(entityManager);
 		closeWindow();
 	}
 
 	@Override
 	public void onKeyPressed(KeyPressedEvent e) {
-		// TODO Auto-generated method stub
-		if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
+		switch(e.getKeyCode()) {
+		case KeyEvent.VK_ESCAPE:
+			System.out.println("Beenden");
 			runLoop = false;
+			break;
+		case KeyEvent.VK_P:
+			System.out.println("Pause");
+			break;
 		}
 	}
 
