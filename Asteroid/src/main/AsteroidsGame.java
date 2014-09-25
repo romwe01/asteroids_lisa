@@ -2,6 +2,8 @@ package main;
 
 import core.Core;
 import entities.Entity;
+import entities.EntityManager;
+import entities.Ship;
 import enumeration.Enumerations;
 import graphics.GraphicsConfig;
 import graphics.RenderLayer;
@@ -24,13 +26,17 @@ public class AsteroidsGame {
 		c = new Core(new GraphicsConfig(defaultWidth, defaultHeight, 60, FULLSCREEN));
 		
 		//Entity player
+		Ship player = new Ship("Player 1", c, 50, 50, 50);
+		
 		//Entity asteroids
 		
 		//add to entityManager
+		c.addEntity(player);
 		
 		
 		while (c.getRunLoop() != false){
 			c.requestUpdate();
+			
 		}
 		
 		c.closeWindow();

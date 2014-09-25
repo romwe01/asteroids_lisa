@@ -3,6 +3,7 @@ package core;
 import java.awt.event.KeyEvent;
 
 import entities.Entity;
+import entities.EntityManager;
 import enumeration.Enumerations;
 //import events.EventManager;
 import events.GameEvent;
@@ -17,7 +18,7 @@ public class Core implements KeyPressedListener{
 
 	public InputManager inputManager;
 	//public EventManager eventManager;
-	//public EntityManager entityManager;
+	public EntityManager entityManager;
 	public GraphicsSystem graphicsSystem;
 	public GraphicsConfig graphicsConfig;
 	public UpdateManager updateManager;
@@ -28,7 +29,7 @@ public class Core implements KeyPressedListener{
 	public boolean isDebug = true;
 	
 	public Core (GraphicsConfig graphicsConfig){
-		//entityManager = new EntityManager(this);
+		entityManager = new EntityManager();
 		inputManager = new InputManager(this);
 		//eventManager = new EventManager();
 		graphicsSystem = new GraphicsSystem(this);
@@ -44,11 +45,11 @@ public class Core implements KeyPressedListener{
 		graphicsSystem.open(gc.Width, gc.Height, gc.Fullscreen);
 	}
 	
-	/*
+	
 	public void addEntity(Entity e){
 		entityManager.addEntity(e);
 	}
-	*/
+	
 	public void closeWindow(){
 		graphicsSystem.close();
 	}

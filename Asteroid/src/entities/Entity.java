@@ -2,6 +2,7 @@ package entities;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 import core.Core;
 import graphics.RenderLayer;
@@ -11,6 +12,7 @@ public abstract class Entity {
 	private String name;
 	protected Core core;
 	private int renderLayer;
+
 	
 	public Entity(String name, Core core, float x, float y, float radius){
 		
@@ -33,14 +35,14 @@ public abstract class Entity {
 	
 	public void setRenderLayer(int renderLayer){
 		this.renderLayer = renderLayer;
-		core.entityManager = requestRenderLayerUpdate();
+	//	core.entityManager = requestRenderLayerUpdate();
 	}
 	
 	public abstract void update();
 	
 	public abstract void render(Graphics2D g);
 	
-	public abstract Point2D getPosition();
+	public abstract Vector2D getPosition();
 	
 	public abstract void setPosition(float x, float y);
 	
