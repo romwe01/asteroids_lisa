@@ -4,11 +4,13 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.util.ArrayList;
 
+import collision.BoundingCircle;
+
 import core.Core;
 
 public class Ship extends Entity {
 
-	private float radius;
+	private int radius;
 	private Vector2D acceleration = new Vector2D(20, 20);
 	private Vector2D offset = new Vector2D(100, 100);
 	private float maxSpeed = 300f;
@@ -17,9 +19,10 @@ public class Ship extends Entity {
 	private int nextShot = 0;
 	private float cooldown = 0;
 	private float maxCooldown = 0.2f;
+	
 
-	public Ship(String name, Core core, float x, float y, float radius) {
-		super(name, core, x, y);
+	public Ship(String name, Core core, float x, float y, int radius) {
+		super(name, core, x, y, radius);
 
 		this.position = new Vector2D(x, y);
 		this.radius = radius;
@@ -30,7 +33,7 @@ public class Ship extends Entity {
 		this.vertices.add(new Vector2D(1, -1));
 		
 		this.scale = new Vector2D(20, 20);
-
+		core.cT.addPlayerObject(getCollisionObject());
 	}
 	
 	public void setMaxShootCooldown(float maxShootCooldown) {
@@ -50,8 +53,8 @@ public class Ship extends Entity {
 			s.setRotation(this.angle);
 		} else {
 		*/
-			shots[nextShot] = new Shot("shot", core, position.getX(),
-					position.getY(), angle);
+			shots[nextShot] = new Shot("shot", core, (float)position.getX(),
+					(float)position.getY(), angle);
 			Shot s = shots[nextShot];
 		
 		nextShot++;
@@ -89,6 +92,8 @@ public class Ship extends Entity {
 		}
 
 		this.transform();
+		Vector2D c = getPosition();
+		super.updateCollider(new Vector2D((float)c.getX() - radius/2.0f, (float)c.getY() - radius/2.0f));
 	}
 
 	private void transform() {
@@ -106,9 +111,9 @@ public class Ship extends Entity {
 
 	public void rotate(boolean clockwise) {
 		if (clockwise) {
-			this.angle -= 10;
-		} else {
 			this.angle += 10;
+		} else {
+			this.angle -= 10;
 		}
 	}
 
@@ -141,6 +146,7 @@ public class Ship extends Entity {
 				lastVt = vt;
 			}
 		}
+		super.drawCollider(g);
 	}
 
 	@Override
@@ -153,4 +159,11 @@ public class Ship extends Entity {
 		this.position.set(x, y);
 	}
 
+	@Override
+	public void collided(BoundingCircle col) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
 }

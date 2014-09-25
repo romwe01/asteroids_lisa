@@ -4,9 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import collision.BoundingCircle;
+
 import core.Core;
 
-public abstract class Entity {
+public abstract class Entity extends BoundingCircle{
 	protected Vector2D position;
 	protected ArrayList<Vector2D> vertices = new ArrayList<Vector2D>();
 	protected ArrayList<Vector2D> verticesTrans = new ArrayList<Vector2D>();
@@ -16,11 +18,10 @@ public abstract class Entity {
 	
 	private String name;
 	protected Core core;
-	private int renderLayer;
 
 	
-	public Entity(String name, Core core, double d, double e){
-		
+	public Entity(String name, Core core, float d, float e, int radius){
+		super(new Vector2D(d,e), radius);
 		this.name = name;
 		this.core = core;
 	}
@@ -33,14 +34,6 @@ public abstract class Entity {
 		this.name = name;
 	}
 	
-	public int getRenderLayer(){
-		return renderLayer;
-	}
-	
-	public void setRenderLayer(int renderLayer){
-		this.renderLayer = renderLayer;
-	//	core.entityManager = requestRenderLayerUpdate();
-	}
 	
 	public abstract void update();
 	
@@ -50,7 +43,15 @@ public abstract class Entity {
 	
 	public abstract void setPosition(float x, float y);
 	
+	public void drawCollider(Graphics2D g){
+		super.drawBounding(g);
+	}
 	
+	public BoundingCircle getCollisionObject(){
+		return super.getCollisionObject();
+	}
 	
-	
+	public void updateCollider(Vector2D center){
+		super.updateCollider(center);
+	}
 }

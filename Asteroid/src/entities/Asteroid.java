@@ -2,23 +2,40 @@ package entities;
 
 import java.awt.Graphics2D;
 
+import collision.BoundingCircle;
+
 import core.Core;
 
 public class Asteroid extends Entity{
 
-	public Asteroid(String name, Core core, double d, double e) {
-		super(name, core, d, e);
+	private static int radius = 60;
+	private boolean alive = true;
+	
+	
+	public Asteroid(String name, Core core, float d, float e) {
+		super(name, core, d, e, radius);
 		
 		position = new Vector2D(d, e);
 		
 		// shape
+		double num_points = Math.random()*10+3;
+		int num_p = (int) num_points;
+		for (int i = 0; i < num_p; i++){
+			double angle = i*2*Math.PI /num_p;
+			Vector2D point = new Vector2D(Math.cos(angle), Math.sin(angle));
+			vertices.add(point);
+		}
+		/*
 		vertices.add(new Vector2D(0,0));
 		vertices.add(new Vector2D(0,1.5));
 		vertices.add(new Vector2D(1.5,2));
 		vertices.add(new Vector2D(2,1));
 		vertices.add(new Vector2D(1,0));
-		double rnd = (Math.random()*70)+25;
-		scale = new Vector2D(rnd,rnd);
+		*/
+		
+		scale = new Vector2D(30, 30);
+		//velocity = new Vector2D(5, 5);
+		core.cT.addCollisionObject(getCollisionObject());
 	}
 	
 	private void transform() {
@@ -36,27 +53,30 @@ public class Asteroid extends Entity{
 	@Override
 	public void update() {
 		// Velocity / Geschwindigkeit
-				Vector2D vel = new Vector2D(this.velocity.getX() * core.getDT(),
-						this.velocity.getY() * core.getDT());
+		Vector2D vel = new Vector2D(this.velocity.getX() * core.getDT(),this.velocity.getY() * core.getDT());
 
-				this.position.set(this.position.getX() + vel.getX(),
-						this.position.getY() + vel.getY());
+		this.position.set(this.position.getX() + vel.getX(),this.position.getY() + vel.getY());
 
 
 
-				this.transform();
+		this.transform();
+		Vector2D c = getPosition();
+		super.updateCollider(new Vector2D((float)c.getX() - radius/2.0f, (float)c.getY() - radius/2.0f));
 	}
 
 	@Override
 	public void render(Graphics2D g) {
 
-		if (!this.verticesTrans.isEmpty()) {
-			Vector2D lastVt = this.verticesTrans.get(this.vertices.size() - 1);
-			for (Vector2D vt : this.verticesTrans) {
-				g.drawLine((int) vt.getX(), (int) vt.getY(),
-						(int) lastVt.getX(), (int) lastVt.getY());
-				lastVt = vt;
+		if (alive){
+			if (!this.verticesTrans.isEmpty()) {
+				Vector2D lastVt = this.verticesTrans.get(this.vertices.size() - 1);
+				for (Vector2D vt : this.verticesTrans) {
+					g.drawLine((int) vt.getX(), (int) vt.getY(),
+							(int) lastVt.getX(), (int) lastVt.getY());
+					lastVt = vt;
+				}
 			}
+			super.drawCollider(g);
 		}
 	}
 
@@ -68,6 +88,12 @@ public class Asteroid extends Entity{
 	@Override
 	public void setPosition(float x, float y) {
 		this.position.set(x, y);
+	}
+
+	@Override
+	public void collided(BoundingCircle col) {
+		alive = false;
+		
 	}
 
 }

@@ -39,9 +39,8 @@ public class GraphicsSystem {
 		//clear background
 		g.clearRect(-width/2, -height/2, width, height);
 		
-		//core.updateManager.UpdateAll();						//liefert noch NULLPOINTEREXCEPTION weil nix in der liste steht
+		core.cT.update();
 		//update all the entities
-		//core.entityManager.updateAllEntities();
 		core.entityManager.updateAllEntities(g);
 		
 		renderSystem.endUpdate();

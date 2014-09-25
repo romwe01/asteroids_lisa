@@ -3,14 +3,18 @@ package entities;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+import collision.BoundingCircle;
+
 import core.Core;
 
 public class Shot extends Entity {
 
-	private float bulletSpeed = 300;
+	private float bulletSpeed = 700;
+	private static int radius = 2;
+	private boolean alive = true;
 
-	public Shot(String name, Core core, double d, double e, float rotation) {
-		super(name, core, d, e);
+	public Shot(String name, Core core, float d, float e, float rotation) {
+		super(name, core, d, e, radius);
 
 		position = new Vector2D(d, e);
 		angle = rotation;
@@ -20,6 +24,8 @@ public class Shot extends Entity {
 		vertices.add(new Vector2D(0, 1));
 		vertices.add(new Vector2D(1, 1));
 		vertices.add(new Vector2D(1, 0));
+		
+		core.cT.addBulletObject(getCollisionObject());
 	}
 
 	public void setRotation(float rotation) {
@@ -62,19 +68,29 @@ public class Shot extends Entity {
 		Vector2D vel = new Vector2D(this.velocity.getX() * core.getDT(),this.velocity.getY() * core.getDT());
 		this.position.set(this.position.getX() + vel.getX(),this.position.getY() + vel.getY());
 		this.transform();
+		Vector2D c = getPosition();
+		super.updateCollider(new Vector2D((float)c.getX() - radius/2.0f, (float)c.getY() - radius/2.0f));
 	}
 
 	@Override
 	public void render(Graphics2D g) {
 
-		if (!this.verticesTrans.isEmpty()) {
-			Vector2D lastVt = this.verticesTrans.get(this.vertices.size() - 1);
-			for (Vector2D vt : this.verticesTrans) {
-				g.drawLine((int) vt.getX(), (int) vt.getY(),
-						(int) lastVt.getX(), (int) lastVt.getY());
-				lastVt = vt;
+		if (alive){
+			if (!this.verticesTrans.isEmpty()) {
+				Vector2D lastVt = this.verticesTrans.get(this.vertices.size() - 1);
+				for (Vector2D vt : this.verticesTrans) {
+					g.drawLine((int) vt.getX(), (int) vt.getY(),
+							(int) lastVt.getX(), (int) lastVt.getY());
+					lastVt = vt;
+				}
 			}
+			super.drawCollider(g);
 		}
+		else{
+			core.cT.removeBulletObject(getCollisionObject());
+			core.entityManager.removeEntity(this);
+		}
+		
 	}
 
 	@Override
@@ -85,5 +101,11 @@ public class Shot extends Entity {
 	@Override
 	public void setPosition(float x, float y) {
 		this.position.set(x, y);
+	}
+
+	@Override
+	public void collided(BoundingCircle col) {
+		alive = false;
+		
 	}
 }

@@ -6,10 +6,11 @@ import input.InputManager;
 
 import java.awt.event.KeyEvent;
 
+import collision.CollisionTester;
+
 import entities.Entity;
 import entities.EntityManager;
 import events.EventManager;
-//import events.EventManager;
 import events.KeyPressedEvent;
 import events.KeyPressedListener;
 
@@ -17,10 +18,9 @@ import events.KeyPressedListener;
 public class Core implements KeyPressedListener{
 
 	public InputManager inputManager;
-	//public EventManager eventManager;
 	public EntityManager entityManager;
 	public EventManager eventManager;
-	//public EntityManager entityManager;
+	public CollisionTester cT;
 	public GraphicsSystem graphicsSystem;
 	public GraphicsConfig graphicsConfig;
 	
@@ -36,6 +36,7 @@ public class Core implements KeyPressedListener{
 		inputManager = new InputManager(this);
 		eventManager = new EventManager();
 		graphicsSystem = new GraphicsSystem(this);
+		cT = new CollisionTester(this);
 		this.graphicsConfig = graphicsConfig;
 		setGraphicsConfiguration(graphicsConfig);
 		graphicsSystem.addInputManager(inputManager);
