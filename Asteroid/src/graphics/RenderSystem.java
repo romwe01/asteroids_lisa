@@ -9,6 +9,7 @@ import core.Core;
 
 public class RenderSystem extends Frame
 {
+	private static final long serialVersionUID = 1L;
 	private long loopStart; 
 	private long dt, duration = 0;
 	private long TimeFrameN0;

@@ -1,14 +1,14 @@
 package entities;
 
 import java.awt.Graphics2D;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-import collision.BoundingCircle;
+import collision.CircleCollider;
 
 import core.Core;
 
-public abstract class Entity extends BoundingCircle{
+public abstract class Entity extends CircleCollider{
+	
 	protected Vector2D position;
 	protected ArrayList<Vector2D> vertices = new ArrayList<Vector2D>();
 	protected ArrayList<Vector2D> verticesTrans = new ArrayList<Vector2D>();
@@ -16,10 +16,11 @@ public abstract class Entity extends BoundingCircle{
 	protected float angle = 180f;
 	protected Vector2D scale = new Vector2D(2,2);
 	
+	
 	private String name;
 	protected Core core;
-
 	
+	//calls constructor of collider
 	public Entity(String name, Core core, float d, float e, int radius){
 		super(new Vector2D(d,e), radius);
 		this.name = name;
@@ -47,7 +48,7 @@ public abstract class Entity extends BoundingCircle{
 		super.drawBounding(g);
 	}
 	
-	public BoundingCircle getCollisionObject(){
+	public CircleCollider getCollisionObject(){
 		return super.getCollisionObject();
 	}
 	

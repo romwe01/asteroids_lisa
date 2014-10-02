@@ -1,18 +1,15 @@
 package entities;
 
 import java.awt.Graphics2D;
-import java.awt.Polygon;
-import java.util.ArrayList;
 
-import collision.BoundingCircle;
-
+import collision.CircleCollider;
 import core.Core;
 
 public class Ship extends Entity {
 
 	private int radius;
 	private Vector2D acceleration = new Vector2D(20, 20);
-	private Vector2D offset = new Vector2D(100, 100);
+	//private Vector2D offset = new Vector2D(100, 100);
 	private float maxSpeed = 300f;
 	private float friction = 0.90f;
 	private Shot[] shots = new Shot[5];
@@ -21,6 +18,14 @@ public class Ship extends Entity {
 	private float maxCooldown = 0.2f;
 	
 
+	/**
+	 * creates the ship
+	 * @param name
+	 * @param core 
+	 * @param x x-coordinate for collider
+	 * @param y y-coordinate for collider
+	 * @param radius radius for collider
+	 */
 	public Ship(String name, Core core, float x, float y, int radius) {
 		super(name, core, x, y, radius);
 
@@ -40,6 +45,10 @@ public class Ship extends Entity {
 		maxCooldown = maxShootCooldown;
 	}
 
+	/**
+	 * produces bullets 
+	 * @return new bullet, null 
+	 */
 	public Shot shoot() {
 		if(this.cooldown>0){
 			return null;
@@ -53,7 +62,7 @@ public class Ship extends Entity {
 			s.setRotation(this.angle);
 		} else {
 		*/
-			shots[nextShot] = new Shot("shot", core, (float)position.getX(),
+			shots[nextShot] = new Shot("shot" + System.currentTimeMillis(), core, (float)position.getX(),
 					(float)position.getY(), angle);
 			Shot s = shots[nextShot];
 		
@@ -62,6 +71,10 @@ public class Ship extends Entity {
 		return s;
 	}
 
+	/**
+	 * updates the position of the entity and its collider
+	 * checks if entity is inside the window
+	 */
 	@Override
 	public void update() {
 		/*System.out.println("[" + core.graphicsConfig.Width + ", "
@@ -79,6 +92,7 @@ public class Ship extends Entity {
 		} else if (this.position.getX() < -core.graphicsConfig.Width / 2) {
 			this.position.setX(core.graphicsConfig.Width / 2);
 		}
+		
 		// Velocity / Geschwindigkeit
 		Vector2D vel = new Vector2D(this.velocity.getX() * core.getDT(),
 				this.velocity.getY() * core.getDT());
@@ -96,6 +110,9 @@ public class Ship extends Entity {
 		super.updateCollider(new Vector2D((float)c.getX() - radius/2.0f, (float)c.getY() - radius/2.0f));
 	}
 
+	/**
+	 * calls all methods for transforming the player entity 
+	 */
 	private void transform() {
 
 		this.verticesTrans.clear();
@@ -109,6 +126,10 @@ public class Ship extends Entity {
 
 	}
 
+	/**
+	 * in-/decreases the angle of direction
+	 * @param clockwise depends on pressed key for in-/decreasing of angle
+	 */
 	public void rotate(boolean clockwise) {
 		if (clockwise) {
 			this.angle += 10;
@@ -117,6 +138,9 @@ public class Ship extends Entity {
 		}
 	}
 
+	/**
+	 * increases the speed of the player entity until it reaches maximum speed limit
+	 */
 	public void accelerate() {
 		if (this.velocity.getX() < maxSpeed && this.velocity.getX() > -maxSpeed
 				&& this.velocity.getY() < maxSpeed && this.velocity.getY() > -maxSpeed) {
@@ -130,11 +154,17 @@ public class Ship extends Entity {
 		}
 	}
 
+	/**
+	 * decreases the speed of the player entity 
+	 */
 	public void decelerate() {
 		this.velocity.setX(this.velocity.getX() * this.friction);
 		this.velocity.setY(this.velocity.getY() * this.friction);
 	}
 
+	/**
+	 * renders the single vertices and draws a line between them
+	 */
 	@Override
 	public void render(Graphics2D g) {
 
@@ -149,6 +179,7 @@ public class Ship extends Entity {
 		super.drawCollider(g);
 	}
 
+	
 	@Override
 	public Vector2D getPosition() {
 		return this.position;
@@ -160,7 +191,7 @@ public class Ship extends Entity {
 	}
 
 	@Override
-	public void collided(BoundingCircle col) {
+	public void collided(CircleCollider col) {
 		// TODO Auto-generated method stub
 		
 	}

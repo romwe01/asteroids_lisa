@@ -7,27 +7,27 @@ import core.Core;
 public class CollisionTester {
 
 	
-	public ArrayList<BoundingCircle> m_Enemies;
-	private ArrayList<BoundingCircle> m_Bullets;
-	private BoundingCircle m_Player;
+	public ArrayList<CircleCollider> m_Enemies;
+	private ArrayList<CircleCollider> m_Bullets;
+	private CircleCollider m_Player;
 	private Core m_Core;
 	
 	public CollisionTester(Core core){
 		m_Core = core;
-		m_Enemies = new ArrayList<BoundingCircle>();
-		m_Bullets = new ArrayList<BoundingCircle>();
+		m_Enemies = new ArrayList<CircleCollider>();
+		m_Bullets = new ArrayList<CircleCollider>();
 		
 	}
 	
-	public void addBulletObject(BoundingCircle bullet){
+	public void addBulletObject(CircleCollider bullet){
 		m_Bullets.add(bullet);
 	}
 	
-	public void addPlayerObject(BoundingCircle player){
+	public void addPlayerObject(CircleCollider player){
 		m_Player = player;
 	}
 	
-	public void addCollisionObject(BoundingCircle obj){
+	public void addCollisionObject(CircleCollider obj){
 		if (!m_Enemies.contains(obj)){
 			m_Enemies.add(obj);
 		}
@@ -36,19 +36,22 @@ public class CollisionTester {
 		}
 	}
 	
-	public void removeBulletObject(BoundingCircle bullet){
+	public void removeBulletObject(CircleCollider bullet){
 		if (m_Bullets.contains(bullet)){
 			m_Bullets.remove(bullet);
 		}
 	}
 	
-	public void removeCollisionObject(BoundingCircle obj){
+	public void removeCollisionObject(CircleCollider obj){
 		if (m_Enemies.contains(obj)){
 			m_Enemies.remove(obj);
 		}
 		
 	}
 	
+	/**
+	 * runs over all objects, calls method for collision detection
+	 */
 	public void update(){
 		for (int i = 0; i < m_Enemies.size(); i++){
 			if (checkCollisionWithPlayer(m_Enemies.get(i))){
@@ -66,7 +69,12 @@ public class CollisionTester {
 		}
 	}
 	
-	private boolean checkCollisionWithPlayer(BoundingCircle obj){
+	/**
+	 * checks if player collides with another entity
+	 * @param obj
+	 * @return
+	 */
+	private boolean checkCollisionWithPlayer(CircleCollider obj){
 		if (((m_Player.getCenter().getX() - obj.getCenter().getX() - obj.getRadius()/2.0f) * (m_Player.getCenter().getX() - obj.getCenter().getX() - obj.getRadius()/2.0f)) < ((m_Player.getRadius()/2.0f + obj.getRadius()/2.0f) * (m_Player.getRadius()/2.0f + obj.getRadius()/2.0f)) &&
 				((m_Player.getCenter().getY() - obj.getCenter().getY() - obj.getRadius()/2.0f) *(m_Player.getCenter().getY() - obj.getCenter().getY() - obj.getRadius()/2.0f)) < ((m_Player.getRadius()/2.0f + obj.getRadius()/2.0f)  * (m_Player.getRadius()/2.0f + obj.getRadius()/2.0f)))
 		{
@@ -75,7 +83,13 @@ public class CollisionTester {
 		return false;
 	}
 	
-	private boolean checkCollisionWithAsteroid(BoundingCircle bullet, BoundingCircle asteroid){
+	/**
+	 * checks if two objects collide
+	 * @param bullet collider of a bullet entity
+	 * @param asteroid collider of an asteroid entity
+	 * @return
+	 */
+	private boolean checkCollisionWithAsteroid(CircleCollider bullet, CircleCollider asteroid){
 		if ( ((bullet.getCenter().getX() - asteroid.getCenter().getX() - asteroid.getRadius()/2.0f) * (bullet.getCenter().getX() - asteroid.getCenter().getX() - asteroid.getRadius()/2.0f)) < ((bullet.getRadius()/2.0f + asteroid.getRadius()/2.0f) * (bullet.getRadius()/2.0f + asteroid.getRadius()/2.0f))&&
 				((bullet.getCenter().getY() - asteroid.getCenter().getY() - asteroid.getRadius()/2.0f) *(bullet.getCenter().getY() - asteroid.getCenter().getY() - asteroid.getRadius()/2.0f)) < ((bullet.getRadius()/2.0f + asteroid.getRadius()/2.0f) *(bullet.getRadius()/2.0f + asteroid.getRadius()/2.0f)) ){
 			return true;

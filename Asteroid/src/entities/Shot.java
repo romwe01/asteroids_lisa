@@ -1,10 +1,8 @@
 package entities;
 
 import java.awt.Graphics2D;
-import java.util.ArrayList;
 
-import collision.BoundingCircle;
-
+import collision.CircleCollider;
 import core.Core;
 
 public class Shot extends Entity {
@@ -25,6 +23,7 @@ public class Shot extends Entity {
 		vertices.add(new Vector2D(1, 1));
 		vertices.add(new Vector2D(1, 0));
 		
+		//collider
 		core.cT.addBulletObject(getCollisionObject());
 	}
 
@@ -32,6 +31,9 @@ public class Shot extends Entity {
 		this.angle = rotation;
 	}
 
+	/**
+	 * calls all methods for transforming the bullet
+	 */
 	private void transform() {
 
 		this.verticesTrans.clear();
@@ -44,6 +46,9 @@ public class Shot extends Entity {
 		}
 	}
 
+	/**
+	 * sets the velocity of the flying bullet
+	 */
 	public void fire() {
 		this.velocity = new Vector2D(-Math.sin(this.angle * Math.PI / 180)
 				* bulletSpeed, Math.cos(this.angle * Math.PI / 180)
@@ -51,8 +56,12 @@ public class Shot extends Entity {
 	}
 
 	@Override
+	/**
+	 * updates the position of the bullet
+	 */
 	public void update() {
 
+		
 		if (this.position.getY() > core.graphicsConfig.Height / 2
 				|| this.position.getY() < -core.graphicsConfig.Height / 2
 				|| this.position.getX() > core.graphicsConfig.Width / 2
@@ -72,7 +81,10 @@ public class Shot extends Entity {
 		super.updateCollider(new Vector2D((float)c.getX() - radius/2.0f, (float)c.getY() - radius/2.0f));
 	}
 
-	@Override
+	 
+	/**
+	 * living bullets are rendered, dead bullets are removed from entitymanager
+	 */
 	public void render(Graphics2D g) {
 
 		if (alive){
@@ -87,7 +99,6 @@ public class Shot extends Entity {
 			super.drawCollider(g);
 		}
 		else{
-			core.cT.removeBulletObject(getCollisionObject());
 			core.entityManager.removeEntity(this);
 		}
 		
@@ -104,7 +115,7 @@ public class Shot extends Entity {
 	}
 
 	@Override
-	public void collided(BoundingCircle col) {
+	public void collided(CircleCollider col) {
 		alive = false;
 		
 	}

@@ -6,32 +6,39 @@ import java.awt.Graphics2D;
 import entities.Vector2D;
 
 
-
-public abstract class BoundingCircle {
+public abstract class CircleCollider {
 
 	
 	private Vector2D center;
 	private int radius;
 	
-	public BoundingCircle(Vector2D center, int radius2){
+	public CircleCollider(Vector2D center, int radius2){
 		super();
 		
 		this.center = center;
 		this.radius = radius2;
 	}
 	
+	/**
+	 * draws the collider in magenta, for check purpose only
+	 * @param g
+	 */
 	public void drawBounding(Graphics2D g){
 		g.setColor(Color.magenta);
 		g.drawArc((int)center.getX(), (int)center.getY(), radius, radius, 0, 360);
 	}
 	
-	public abstract void collided(BoundingCircle col);
+	/**
+	 * handles what should happen if two objects collide
+	 * @param col
+	 */
+	public abstract void collided(CircleCollider col);
 	
 	public void updateCollider(Vector2D center){
 		this.center = center;
 	}
 	
-	public BoundingCircle getCollisionObject(){
+	public CircleCollider getCollisionObject(){
 		return this;
 	}
 
@@ -48,7 +55,6 @@ public abstract class BoundingCircle {
 	}
 
 	public Vector2D getCenter() {
-		// TODO Auto-generated method stub
 		return center;
 	}
 	

@@ -19,10 +19,19 @@ public class GameAction {
 	private int amount;
 	private int state;
 	
+	/**
+	 * create a new GameAction with the normal behavior
+	 * @param name
+	 */
 	public GameAction(String name){
 		this(name, NORMAL);
 	}
 	
+	/**
+	 * create a new GameAction with the specified behavior
+	 * @param name
+	 * @param behavior
+	 */
 	public GameAction (String name, int behavior){
 		this.name = name;
 		this.behavior = behavior;

@@ -39,9 +39,10 @@ public class GraphicsSystem {
 		//clear background
 		g.clearRect(-width/2, -height/2, width, height);
 		
-		core.cT.update();
+		
 		//update all the entities
-		core.entityManager.updateAllEntities(g);
+		core.entityManager.updateAllEntities();
+		core.entityManager.renderAllEntities(g);
 		
 		renderSystem.endUpdate();
 	}

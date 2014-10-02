@@ -2,7 +2,7 @@ package entities;
 
 import java.awt.Graphics2D;
 
-import collision.BoundingCircle;
+import collision.CircleCollider;
 
 import core.Core;
 
@@ -10,13 +10,14 @@ public class Asteroid extends Entity{
 
 	private static int radius = 60;
 	private boolean alive = true;
+	private float speed = 1;
 	
 	
 	public Asteroid(String name, Core core, float d, float e) {
 		super(name, core, d, e, radius);
 		
 		position = new Vector2D(d, e);
-		
+		//velocity = new Vector2D(speed, speed);
 		// shape
 		double num_points = Math.random()*10+3;
 		int num_p = (int) num_points;
@@ -34,10 +35,12 @@ public class Asteroid extends Entity{
 		*/
 		
 		scale = new Vector2D(30, 30);
-		//velocity = new Vector2D(5, 5);
 		core.cT.addCollisionObject(getCollisionObject());
 	}
 	
+	/**
+	 * calls all methods for transforming the asteroid entity 
+	 */
 	private void transform() {
 		
 		this.verticesTrans.clear();
@@ -51,13 +54,15 @@ public class Asteroid extends Entity{
 	}
 
 	@Override
+	/**
+	 * updates the new position of the asteroid and collider
+	 */
 	public void update() {
+		
 		// Velocity / Geschwindigkeit
 		Vector2D vel = new Vector2D(this.velocity.getX() * core.getDT(),this.velocity.getY() * core.getDT());
 
 		this.position.set(this.position.getX() + vel.getX(),this.position.getY() + vel.getY());
-
-
 
 		this.transform();
 		Vector2D c = getPosition();
@@ -65,6 +70,9 @@ public class Asteroid extends Entity{
 	}
 
 	@Override
+	/**
+	 * renders living asteroids
+	 */
 	public void render(Graphics2D g) {
 
 		if (alive){
@@ -78,6 +86,7 @@ public class Asteroid extends Entity{
 			}
 			super.drawCollider(g);
 		}
+		
 	}
 
 	@Override
@@ -91,7 +100,7 @@ public class Asteroid extends Entity{
 	}
 
 	@Override
-	public void collided(BoundingCircle col) {
+	public void collided(CircleCollider col) {
 		alive = false;
 		
 	}

@@ -26,11 +26,14 @@ public class Core implements KeyPressedListener{
 	
 	// delta time
 	private float dt;
-	private boolean runLoop = true;
-	private boolean isPaused = false;
 	
+	private boolean runLoop = true;	
 	public boolean isDebug = true;
 	
+	/**
+	 * is the core of the game, implements all needed pieces for running the game
+	 * @param graphicsConfig
+	 */
 	public Core (GraphicsConfig graphicsConfig){
 		entityManager = new EntityManager();
 		inputManager = new InputManager(this);
@@ -38,11 +41,16 @@ public class Core implements KeyPressedListener{
 		graphicsSystem = new GraphicsSystem(this);
 		cT = new CollisionTester(this);
 		this.graphicsConfig = graphicsConfig;
+		
 		setGraphicsConfiguration(graphicsConfig);
 		graphicsSystem.addInputManager(inputManager);
 		setUp();
 	}
 	
+	/**
+	 * opens the window and sets the frame rate
+	 * @param gc
+	 */
 	private void setGraphicsConfiguration(GraphicsConfig gc){
 		graphicsSystem.setFrameRate(gc.FPS);
 		graphicsSystem.open(gc.Width, gc.Height, gc.Fullscreen);
@@ -104,9 +112,11 @@ public class Core implements KeyPressedListener{
 			System.out.println("Beenden");
 			runLoop = false;
 			break;
+			/*
 		case KeyEvent.VK_P:
 			System.out.println("Pause");
 			break;
+			*/
 		}
 	}
 

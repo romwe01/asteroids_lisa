@@ -23,6 +23,9 @@ public class Fullscreen implements Screen{
 	}
 	
 	@Override
+	/**
+	 * creates window
+	 */
 	public void open(int width, int height) {
 		// TODO Auto-generated method stub
 		this.width = width;
@@ -44,15 +47,16 @@ public class Fullscreen implements Screen{
 	}
 
 	@Override
+	/**
+	 * closes window
+	 */
 	public void close() {
-		// TODO Auto-generated method stub
 		graphicsDevice.setFullScreenWindow(null);
 		renderSystem.dispose();
 	}
 
 	@Override
 	public Graphics2D beginUpdate() {
-		// TODO Auto-generated method stub
 		drawGraphics = (Graphics2D) bufferStrategy.getDrawGraphics();
 		AffineTransform at = new AffineTransform();
 		at.setToIdentity();

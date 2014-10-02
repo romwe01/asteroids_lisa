@@ -2,11 +2,8 @@ package main;
 
 import core.Core;
 import entities.Asteroid;
-import entities.Entity;
-import entities.EntityManager;
 import entities.Ship;
 import graphics.GraphicsConfig;
-import core.Core;
 
 public class AsteroidsGame {
 
