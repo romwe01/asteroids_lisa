@@ -3,19 +3,19 @@ package core;
 import graphics.GraphicsConfig;
 import graphics.GraphicsSystem;
 import input.InputManager;
-
-import java.awt.event.KeyEvent;
-
+import messenger.Messenger;
+import statemachine.EndState;
+import statemachine.MenuState;
+import statemachine.State;
+import statemachine.PlayState;
+import statemachine.SplashState;
+import statemachine.StateMachine;
 import collision.CollisionTester;
-
-import entities.Entity;
 import entities.EntityManager;
+import events.EventListener.EventType;
 import events.EventManager;
-import events.KeyPressedEvent;
-import events.KeyPressedListener;
 
-
-public class Core implements KeyPressedListener{
+public class Core {
 
 	public InputManager inputManager;
 	public EntityManager entityManager;
@@ -23,102 +23,115 @@ public class Core implements KeyPressedListener{
 	public CollisionTester cT;
 	public GraphicsSystem graphicsSystem;
 	public GraphicsConfig graphicsConfig;
-	
+	public Messenger messenger;
+
+	public State splashState;
+	public State menuState;
+	public State playState;
+	public State endState;
+	public StateMachine stateMachine;
+
 	// delta time
 	private float dt;
-	
-	private boolean runLoop = true;	
+
+	private boolean runLoop = true;
 	public boolean isDebug = true;
-	
+
 	/**
-	 * is the core of the game, implements all needed pieces for running the game
+	 * is the core of the game, implements all needed pieces for running the
+	 * game
+	 * 
 	 * @param graphicsConfig
 	 */
-	public Core (GraphicsConfig graphicsConfig){
-		entityManager = new EntityManager();
+	public Core(GraphicsConfig graphicsConfig) {
 		inputManager = new InputManager(this);
 		eventManager = new EventManager();
 		graphicsSystem = new GraphicsSystem(this);
+
+		// Collision
 		cT = new CollisionTester(this);
 		this.graphicsConfig = graphicsConfig;
-		
+
 		setGraphicsConfiguration(graphicsConfig);
 		graphicsSystem.addInputManager(inputManager);
-		setUp();
+
+		this.setupStateMachine();
 	}
-	
+
 	/**
 	 * opens the window and sets the frame rate
+	 * 
 	 * @param gc
 	 */
-	private void setGraphicsConfiguration(GraphicsConfig gc){
+	private void setGraphicsConfiguration(GraphicsConfig gc) {
 		graphicsSystem.setFrameRate(gc.FPS);
 		graphicsSystem.open(gc.Width, gc.Height, gc.Fullscreen);
 	}
-	
-	
-	public void addEntity(Entity e){
-		entityManager.addEntity(e);
-	}
-	
-	public void closeWindow(){
+
+	public void closeWindow() {
 		graphicsSystem.close();
 	}
-	
-	public void setDT(float dt){
+
+	public void setDT(float dt) {
 		this.dt = dt;
 	}
-	
-	public float getDT(){
+
+	public float getDT() {
 		return dt;
 	}
-	
-	public void requestUpdate(){
+
+	public void requestUpdate() {
 		eventManager.handleEvents();
-		graphicsSystem.render();
+
+		// update and render each state
+		stateMachine.update();
+		messenger.update();
 	}
-	
-	public boolean getRunLoop(){
+
+	public boolean getRunLoop() {
 		return runLoop;
 	}
-	
-	public GraphicsConfig getGraphicsConfig(){
+
+	public GraphicsConfig getGraphicsConfig() {
 		return graphicsConfig;
 	}
-	
-	
-	@Override
+
 	public String getType() {
 		return EventType.KEY.name();
 	}
 
-	@Override
-	public void setUp() {
-		eventManager.addListener(this, getType());
-		eventManager.addListener(entityManager, getType());
+	// public void tearDown() {
+	// closeWindow();
+	// }
+
+	/**
+	 * setup state machine, which manages all game states
+	 */
+	private void setupStateMachine() {
+		// Messenger
+		messenger = new Messenger();
+
+		// setup state machine
+		playState = new PlayState(messenger, eventManager, this);
+		splashState = new SplashState(messenger, this);
+		menuState = new MenuState(messenger, this);
+		endState = new EndState(messenger);
+		stateMachine = new StateMachine(splashState, playState);
+
+		// add states
+		// TODO: move initializing start and end state to addState()
+		stateMachine.addState(menuState);
+		stateMachine.addState(endState);
+
+		// add transitions between game states
+		stateMachine.addTransition(splashState, "x", menuState);
+		stateMachine.addTransition(menuState, "x", playState);
+		stateMachine.addTransition(playState, "m", menuState);
+		stateMachine.addTransition(playState, "q", endState);
+
+		messenger.subscribe(() -> runLoop = false, "quit");
+		eventManager.addListener(stateMachine, getType());
+
 	}
 
-	@Override
-	public void tearDown() {
-		eventManager.removeListener(this);
-		eventManager.removeListener(entityManager);
-		closeWindow();
-	}
-
-	@Override
-	public void onKeyPressed(KeyPressedEvent e) {
-		switch(e.getKeyCode()) {
-		case KeyEvent.VK_ESCAPE:
-			System.out.println("Beenden");
-			runLoop = false;
-			break;
-			/*
-		case KeyEvent.VK_P:
-			System.out.println("Pause");
-			break;
-			*/
-		}
-	}
-
-	
 }

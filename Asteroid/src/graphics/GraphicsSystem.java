@@ -1,17 +1,19 @@
 package graphics;
 
-import java.awt.Graphics2D;
-
 import core.Core;
 import input.InputManager;
-
+/**
+ * Provides methods for setting up the graphic system. Rendering happens in the game states.
+ * @author Lisa
+ *
+ */
 public class GraphicsSystem {
 
-	private RenderSystem renderSystem;
+	public RenderSystem renderSystem;
 	private Core core;
 	
-	private int width;
-	private int height; 
+	public int width;
+	public int height; 
 	
 	public GraphicsSystem(Core core)
 	{
@@ -30,21 +32,6 @@ public class GraphicsSystem {
 		this.width = width;
 		this.height = height; 
 		renderSystem.open(core, width, height, fullscreen);
-	}
-	
-	public void render()
-	{
-		//calculate time
-		Graphics2D g = renderSystem.beginUpdate();
-		//clear background
-		g.clearRect(-width/2, -height/2, width, height);
-		
-		
-		//update all the entities
-		core.entityManager.updateAllEntities();
-		core.entityManager.renderAllEntities(g);
-		
-		renderSystem.endUpdate();
 	}
 	
 	public void setFrameRate(int fps)

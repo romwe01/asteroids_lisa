@@ -10,7 +10,7 @@ import main.AsteroidsGame;
 import events.KeyPressedEvent;
 import events.KeyPressedListener;
 
-public class EntityManager implements KeyPressedListener {
+public class EntityManager {
 
 	public ArrayList<Entity> entities;
 	private EntityQueue entityQueue;
@@ -65,54 +65,6 @@ public class EntityManager implements KeyPressedListener {
 		for (Entity ent: objects.values()){
 			ent.render(g);
 		}
-	}
-	
-	@Override
-	public String getType() {
-		return EventType.KEY.name();
-	}
-
-	@Override
-	public void setUp() {
-		// handled in core
-		
-
-	}
-
-	@Override
-	public void tearDown() {
-		// handled in core
-		
-	}
-
-	/**
-	 * handles what the ship should do if keys are pressed
-	 */
-	@Override
-	public void onKeyPressed(KeyPressedEvent e) {
-		switch (e.getKeyCode()) {
-		case KeyEvent.VK_UP:
-			AsteroidsGame.player.accelerate();
-			break;
-		case KeyEvent.VK_DOWN:
-			AsteroidsGame.player.decelerate();
-			break;
-		case KeyEvent.VK_LEFT:
-			AsteroidsGame.player.rotate(true);
-			break;
-		case KeyEvent.VK_RIGHT:
-			AsteroidsGame.player.rotate(false);
-			break;
-		case KeyEvent.VK_SPACE:
-			Shot en = AsteroidsGame.player.shoot();
-			if(en!=null){
-				//entities.add(en);
-				addEntity(en);
-				en.fire();
-			}
-			break;
-		}
-
 	}
 
 }

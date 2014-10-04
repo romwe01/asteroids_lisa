@@ -1,43 +1,39 @@
 package main;
 
 import core.Core;
-import entities.Asteroid;
 import entities.Ship;
 import graphics.GraphicsConfig;
 
 public class AsteroidsGame {
 
-	
 	final static boolean FULLSCREEN = false;
 	static Core c;
 	static int defaultWidth = 900;
 	static int defaultHeight = 600;
 	public static Ship player;
-	
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 
-		c = new Core(new GraphicsConfig(defaultWidth, defaultHeight, 60, FULLSCREEN));
+		System.out.println(
+				"Press 'x' to go through menu.\n\n"
+				+ "During the game: \n"
+				+ "Press 'm' to go back to Menu.\n"
+				+ "Press 'q' to quit.\n"
+				);
 		
-		//Entity player
-		player = new Ship("Player 1", c, 50, 50, 50);
-		
-		//Entity asteroids
-		c.addEntity(new Asteroid("astroid 1", c, -100, 100));
-		//add to entityManager
-		c.addEntity(player);
-		
-		
-		while (c.getRunLoop() != false){
+		c = new Core(new GraphicsConfig(defaultWidth, defaultHeight, 60,
+				FULLSCREEN));
+
+		while (c.getRunLoop() != false) {
 			c.requestUpdate();
 			
 		}
-		
+
 		c.closeWindow();
-		
-		
+
 	}
 
 }

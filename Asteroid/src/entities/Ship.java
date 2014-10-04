@@ -152,6 +152,7 @@ public class Ship extends Entity {
 					* this.acceleration.getY());
 
 		}
+		System.out.println("accelerate");
 	}
 
 	/**
