@@ -1,6 +1,11 @@
 package entities;
 
 
+import java.awt.Graphics2D;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import score.Score;
 import statemachine.PlayState;
 import vector.Vector2D;
 import collider.CircleCollider;
@@ -14,7 +19,8 @@ public class Ship extends Entity{
 	private int nextShot = 0;
 	private float cooldown= 0;
 	private float maxCoolDown = 0.2f;
-	
+	public int lives = 3;
+	private boolean alive = true;
 	
 	/**
 	 * creates the ship
@@ -101,9 +107,21 @@ public class Ship extends Entity{
 	public void decelerate() {
 		this.velocity.setX(this.velocity.getX() * this.friction);
 		this.velocity.setY(this.velocity.getY() * this.friction);
-		
 	}
 
+	public void render(Graphics2D g){
+		if (alive){
+			super.render(g);
+		}
+		else{
+			//TODO: change state to menu or highscore or game over?
+			Calendar a = Calendar.getInstance();
+			SimpleDateFormat f = new SimpleDateFormat();
+			
+			core.scores.add(new Score(f.format(a.getTime()).toString(), core.score));
+		}
+	}
+	
 	/**
 	 * produces bullets 
 	 * @return new bullet, null 
@@ -125,6 +143,13 @@ public class Ship extends Entity{
 
 	@Override
 	public void collided(CircleCollider col) {
+		if (lives > 0){
+			lives--;
+		}
+		else{
+			alive = false;
+		}
+		
 	}
 
 	

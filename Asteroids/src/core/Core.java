@@ -1,6 +1,15 @@
 package core;
 
-import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 
 import messenger.Messenger;
 import collider.CollisionTester;
@@ -8,11 +17,11 @@ import entities.Entity;
 import entities.EntityManager;
 import events.EventListener.EventType;
 import events.EventManager;
-import events.KeyPressedEvent;
-import events.KeyPressedListener;
 import graphics.GraphicsConfig;
 import graphics.GraphicsSystem;
 import input.InputManager;
+import score.Score;
+import score.ScoreComparator;
 import statemachine.CreditsState;
 import statemachine.EndState;
 import statemachine.HighscoreState;
@@ -45,13 +54,19 @@ public class Core{
 	public State highscoreState;
 	public StateMachine stateMachine;
 	
+	public int score =0;
+	public ArrayList<Score> scores;
+	public File file;
+	
+	
 	/**
 	 * is the core of the game, implements all needed pieces for running the
 	 * game
 	 * 
 	 * @param graphicsConfig
+	 * @throws IOException 
 	 */
-	public Core(GraphicsConfig graphicsConfig) {
+	public Core(GraphicsConfig graphicsConfig){
 		updateManager = new UpdateManager();
 		inputManager = new InputManager(this);
 		
@@ -63,8 +78,34 @@ public class Core{
 		setGraphicsConfiguration(this.graphicsConfig);
 		graphicsSystem.addInputManager(inputManager);
 		
+		scores = new ArrayList<Score>();
+		//Read xML File for Highscore
+		file = new File("scores.txt");
+		try {
+			readFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		this.setupStateMachine();
+	}
+
+	private void readFile() throws IOException {
+		
+		if (!file.exists()){
+			file.createNewFile();
+		}
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		String line = reader.readLine();
+		while (line != null){
+			String[]parts = line.split(" ");
+			System.out.println(parts[1]);
+			scores.add(new Score(parts[1], Integer.parseInt(parts[0])));
+			line = reader.readLine();
+		}
+		reader.close();	
+		Collections.sort(scores, new ScoreComparator());
 	}
 
 	public float getDT() {
@@ -76,9 +117,33 @@ public class Core{
 	}
 	
 	public void closeWindow() {
+		writeFile();
+		System.out.println("done");
 		graphicsSystem.close();
 	}
 	
+	private void writeFile() {
+		try {
+			if (!file.exists()){
+				file.createNewFile();
+			}
+				
+			FileOutputStream fos = new FileOutputStream(file);
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+			Iterator<Score> itr = scores.iterator();
+			while (itr.hasNext()){
+				String element = itr.next().toString();
+				bw.write(element);
+				
+				bw.newLine();
+			}
+			bw.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void requestUpdate(){
 		eventManager.handleEvents();
 		//update and render each state

@@ -1,5 +1,6 @@
 package statemachine;
 
+import java.awt.Font;
 import java.awt.Graphics2D;
 
 import update.UpdateManager;
@@ -22,6 +23,7 @@ public class PlayState extends State {
 	private Core c;
 	public CollisionTester collisionT;
 	public UpdateManager updateManager;
+	public Font stringFont;
 
 	// Entities
 	public Ship player;
@@ -34,9 +36,11 @@ public class PlayState extends State {
 		//Collision
 		collisionT = new CollisionTester(c);
 		
+		// text for splash screen
+		stringFont = new Font( "SansSerif", Font.PLAIN, 15 );
 
 		// Entity player
-		player = new Ship("Player 1",this, this.c, 50f, 50f, 50);
+		player = new Ship("Player 1",this, this.c, 100f, 100f, 50);
 		
 		// Add entities to EntityManager
 		entityManager.addEntity(player);
@@ -103,6 +107,11 @@ public class PlayState extends State {
 		
 		//clear background
 		g.clearRect(-c.graphicsSystem.width/2, -c.graphicsSystem.height/2, c.graphicsSystem.width, c.graphicsSystem.height);
+		
+		//score
+		g.setFont(stringFont);
+		g.drawString("SCORE  " + c.score, 100, 290);
+		g.drawString("LIVES " + player.lives, 200, 290);
 		
 		c.updateManager.UpdateAll();
 		//update all the entities

@@ -44,7 +44,7 @@ public class AsteroidEmmitter extends Entity{
 	public void update() {
 		if(createAsteroid()){
 			state.entityManager.addEntity(new Asteroid("aster" + " " + System.currentTimeMillis(),state, core, es));
-			System.out.println("Asteroid erstellt");
+			//System.out.println("Asteroid erstellt");
 		}
 	}
 

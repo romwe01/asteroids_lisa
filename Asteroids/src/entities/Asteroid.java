@@ -131,7 +131,7 @@ public class Asteroid extends Entity {
 	@Override
 	public void collided(CircleCollider col) {
 		alive = false;
-		
+		core.score += 10;
 	}
 
 }
