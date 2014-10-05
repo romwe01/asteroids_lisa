@@ -116,6 +116,9 @@ public class StateMachine extends State implements KeyPressedListener {
 		case KeyEvent.VK_SPACE:
 			this.handle("space");
 			break;
+		case KeyEvent.VK_ENTER:
+			this.handle("enter");
+			break;
 		case KeyEvent.VK_M:
 			this.handle("m");
 			break;

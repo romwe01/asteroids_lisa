@@ -13,7 +13,9 @@ import events.KeyPressedListener;
 import graphics.GraphicsConfig;
 import graphics.GraphicsSystem;
 import input.InputManager;
+import statemachine.CreditsState;
 import statemachine.EndState;
+import statemachine.HighscoreState;
 import statemachine.MenuState;
 import statemachine.PlayState;
 import statemachine.SplashState;
@@ -39,6 +41,8 @@ public class Core{
 	public State menuState;
 	public State playState;
 	public State endState;
+	public State creditsState;
+	public State highscoreState;
 	public StateMachine stateMachine;
 	
 	/**
@@ -110,25 +114,35 @@ public class Core{
 	 */
 	private void setupStateMachine(){
 		messenger = new Messenger();
+		messenger.subscribe(() ->runLoop = false, "quit");
 		
 		//setup state machine
 		playState = new PlayState(messenger, eventManager, this);
 		splashState = new SplashState(messenger, this);
-		menuState = new MenuState(messenger, this);
 		endState = new EndState(messenger);
 		stateMachine = new StateMachine(splashState, playState);
+		menuState = new MenuState(messenger, this, stateMachine);
+		creditsState = new CreditsState(messenger, this);
+		highscoreState = new HighscoreState(messenger, this);
 		
 		//add states
 		stateMachine.addState(menuState);
 		stateMachine.addState(endState);
+		stateMachine.addState(creditsState);
+		stateMachine.addState(highscoreState);
 		
 		//add transitions between game states
 		stateMachine.addTransition(splashState, "x", menuState);
-		stateMachine.addTransition(menuState, "x", playState);
+		stateMachine.addTransition(menuState, "play", playState);
+		stateMachine.addTransition(menuState, "exit", endState);
+
+		stateMachine.addTransition(menuState, "highscore", highscoreState);
+		stateMachine.addTransition(menuState, "credits", creditsState);
 		stateMachine.addTransition(playState, "m", menuState);
 		stateMachine.addTransition(playState, "q", endState);
+		stateMachine.addTransition(highscoreState, "m", menuState);
+		stateMachine.addTransition(creditsState, "m", menuState);
 		
-		messenger.subscribe(() ->runLoop = false, "quit");
 		eventManager.addListener(stateMachine, getType());
 	}
 

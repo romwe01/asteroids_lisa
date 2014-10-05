@@ -30,9 +30,8 @@ public class EndState extends State {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
 		System.out.println("update EndState");
-		
+		messenger.send("quit");
 	}
 	
 }
