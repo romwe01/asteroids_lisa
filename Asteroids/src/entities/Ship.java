@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import messenger.Messenger;
 import score.Score;
 import statemachine.PlayState;
 import vector.Vector2D;
@@ -21,6 +22,7 @@ public class Ship extends Entity{
 	private float maxCoolDown = 0.2f;
 	public int lives = 3;
 	private boolean alive = true;
+	public Messenger messenger;
 	
 	/**
 	 * creates the ship
@@ -30,7 +32,7 @@ public class Ship extends Entity{
 	 * @param y y-coordinate for collider
 	 * @param radius radius for collider
 	 */
-	public Ship(String name, PlayState state, Core core, float x, float y, int radius) {
+	public Ship(String name, PlayState state, Core core, float x, float y, int radius, Messenger messenger) {
 		super(name,state, core, x, y, radius);
 		
 		//shape
@@ -42,6 +44,8 @@ public class Ship extends Entity{
 		this.scale = new Vector2D (20, 20);
 		this.speed = 300f;
 		state.collisionT.addPlayer(super.getCollisionObject());
+		
+		this.messenger = messenger;
 	}
 	
 	public void setMaxShootCooldown(float maxShootCooldown){
@@ -114,11 +118,12 @@ public class Ship extends Entity{
 			super.render(g);
 		}
 		else{
-			//TODO: change state to menu or highscore or game over?
 			Calendar a = Calendar.getInstance();
 			SimpleDateFormat f = new SimpleDateFormat();
-			
 			core.scores.add(new Score(f.format(a.getTime()).toString(), core.score));
+			
+			// transition to menu
+			messenger.send("gameover");
 		}
 	}
 	
@@ -151,9 +156,17 @@ public class Ship extends Entity{
 		}
 		
 	}
-
 	
-	
-	
-
+	/**
+	 * reset ship to start position
+	 */
+	public void reset(){
+		this.angle = 180f;
+		this.speed = 200;
+		this.velocity = new Vector2D(0,0);
+		this.position.set(0, 0);
+		this.lives = 3;
+		
+		this.alive = true;
+	}
 }

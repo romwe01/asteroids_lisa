@@ -6,21 +6,32 @@ import java.util.Map;
 import events.KeyPressedEvent;
 import events.KeyPressedListener;
 
+/**
+ * manages setup and transition of states
+ * @author Lisa
+ *
+ */
 public class StateMachine extends State implements KeyPressedListener {
 	
-	State currState;
-	State startState;
-	State endState;
-	Map<State, Map> states;
+	private State currState;		// currently activated state
+	private State startState;
+	private State endState;
+	private Map<State, Map> states;	// stores all states including transition settings
 	
+	/**
+	 * setup with start and end state
+	 * @param start
+	 * @param end
+	 */
 	public StateMachine(State start, State end){
 		this.startState = start;
 		this.endState = end;
-
 		this.currState = this.startState;
 	
+		// dictionary with all states and their transition settings
 		this.states = new HashMap<State, Map>();
 		
+		// add states with dictionaries to the state machine
 		this.addState(this.startState);
 		this.addState(this.endState);
 		this.currState.activate();
@@ -28,17 +39,20 @@ public class StateMachine extends State implements KeyPressedListener {
 	
 	@Override
 	public void activate() {
-		
 	}
 
 	@Override
 	public void deactivate() {
-	
 	}
 
+	/**
+	 * calls the current state to handle a message
+	 * @param msgType
+	 */
 	@Override
 	public void handle(String msgType) {
 		
+		// transition details
 		Map settings = states.get(currState);
 		boolean isTransition = settings.containsKey(msgType);
 		
@@ -50,24 +64,36 @@ public class StateMachine extends State implements KeyPressedListener {
 		}
 		
 		this.currState.handle(msgType);
-		
 	}
 
+	/**
+	 * updates the current state
+	 */
 	@Override
 	public void update() {
 		this.currState.update();
 	}
 	
+	/**
+	 * adds a state to the state machine
+	 * @param state
+	 */
 	public void addState(State state){
 		
+		// dictionary for transition details
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("destination", null);
 		
 		this.states.put(state, map);
 		
 		return;		
 	}
 	
+	/**
+	 * stores information for transitioning between two states in a dictonary
+	 * @param source state before transition
+	 * @param msg for transition between states
+	 * @param destination state after transition
+	 */
 	public void addTransition(State source, String msg, State destination){
 		Map<String, State> settings = this.states.get(source);
 		
@@ -78,30 +104,25 @@ public class StateMachine extends State implements KeyPressedListener {
 
 	@Override
 	public String getType() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setUp() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void tearDown() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
-	 * sends message which has to be handled by the state machine
+	 * translates key code to message, which is handled by the state machine
 	 */
 	@Override
 	public void onKeyPressed(KeyPressedEvent e) {
-		// TODO Auto-generated method stub
 		switch (e.getKeyCode()) {
-		case KeyEvent.VK_UP:
+		case KeyEvent.VK_UP: 
 			this.handle("up");
 			break;
 		case KeyEvent.VK_DOWN:

@@ -2,6 +2,11 @@ package statemachine;
 
 import messenger.Messenger;
 
+/**
+ * state for exiting game
+ * @author Lisa
+ *
+ */
 public class EndState extends State {
 	
 	public Messenger messenger;
@@ -12,25 +17,25 @@ public class EndState extends State {
 
 	@Override
 	public void activate() {
-		// TODO Auto-generated method stub
-		System.out.println("EndState activated");
 	}
 
 	@Override
 	public void deactivate() {
-		// TODO Auto-generated method stub
-		System.out.println("EndState deactivated");
 	}
 
+	/**
+	 * sends message to messenger
+	 */
 	@Override
 	public void handle(String msgType) {
-		System.out.println("handle EndState");
 		messenger.send(msgType);
 	}
 
+	/**
+	 * quits the game and closes window
+	 */
 	@Override
 	public void update() {
-		System.out.println("update EndState");
 		messenger.send("quit");
 	}
 	

@@ -12,9 +12,13 @@ import entities.EntityManager;
 import entities.Ship;
 import entities.Shot;
 import events.EventManager;
-import events.EventListener.EventType;
 import messenger.Messenger;
 
+/**
+ * the astroid game
+ * @author Lisa
+ *
+ */
 public class PlayState extends State {
 
 	public Messenger messenger;
@@ -36,11 +40,11 @@ public class PlayState extends State {
 		//Collision
 		collisionT = new CollisionTester(c);
 		
-		// text for splash screen
+		// text for screen
 		stringFont = new Font( "SansSerif", Font.PLAIN, 15 );
 
 		// Entity player
-		player = new Ship("Player 1",this, this.c, 100f, 100f, 50);
+		player = new Ship("Player 1",this, this.c, 100f, 100f, 50, this.messenger);
 		
 		// Add entities to EntityManager
 		entityManager.addEntity(player);
@@ -63,22 +67,29 @@ public class PlayState extends State {
 		}
 	}
 
+	/**
+	 * setup state specific subscribers of messenger
+	 */
 	@Override
-	public void activate() {
-		System.out.println("playstate activated");
-		
+	public void activate() {		
 		// subscribe behaviour to messenger
 		this.messenger.subscribe(() -> player.accelerate(), "up");
 		this.messenger.subscribe(() -> player.decelerate(), "down");
 		this.messenger.subscribe(() -> player.rotate(true), "left");
 		this.messenger.subscribe(() -> player.rotate(false), "right");
 		this.messenger.subscribe(() -> shoot(), "space");
+		
+		c.score = 0;
+		// reset player to start position
+		player.reset();
+		
 	}
 
+	/**
+	 * unsubscribe state specific subscribers from messenger
+	 */
 	@Override
-	public void deactivate() {
-		System.out.println("playstate deactivated");
-		
+	public void deactivate() {		
 		this.messenger.unsubscribe(() -> player.accelerate(), "up");
 		this.messenger.unsubscribe(() -> player.decelerate(), "down");
 		this.messenger.unsubscribe(() -> player.rotate(true), "left");
@@ -86,18 +97,21 @@ public class PlayState extends State {
 		this.messenger.unsubscribe(() -> shoot(), "space");
 	}
 
+	/**
+	 * sends a message to the messenger
+	 * @param msgType message
+	 */
 	@Override
 	public void handle(String msgType) {
 		messenger.send(msgType);
 	}
 
+	/**
+	 * updates the rendering
+	 */
 	@Override
 	public void update() {
 		render();
-	}
-
-	public String getType() {
-		return EventType.KEY.name();
 	}
 	
 	public void render()
@@ -113,6 +127,7 @@ public class PlayState extends State {
 		g.drawString("SCORE  " + c.score, 100, 290);
 		g.drawString("LIVES " + player.lives, 200, 290);
 		
+		// check for collision
 		c.updateManager.UpdateAll();
 		//update all the entities
 		entityManager.updateAllEntites();

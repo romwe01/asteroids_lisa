@@ -84,7 +84,6 @@ public class Core{
 		try {
 			readFile();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -100,7 +99,6 @@ public class Core{
 		String line = reader.readLine();
 		while (line != null){
 			String[]parts = line.split(" ");
-			System.out.println(parts[1]);
 			scores.add(new Score(parts[1], Integer.parseInt(parts[0])));
 			line = reader.readLine();
 		}
@@ -118,7 +116,6 @@ public class Core{
 	
 	public void closeWindow() {
 		writeFile();
-		System.out.println("done");
 		graphicsSystem.close();
 	}
 	
@@ -179,16 +176,17 @@ public class Core{
 	 */
 	private void setupStateMachine(){
 		messenger = new Messenger();
-		messenger.subscribe(() ->runLoop = false, "quit");
+		messenger.subscribe(() -> runLoop = false, "quit");
+		messenger.subscribe(() -> stateMachine.handle("gameover"), "gameover");
 		
 		//setup state machine
-		playState = new PlayState(messenger, eventManager, this);
-		splashState = new SplashState(messenger, this);
-		endState = new EndState(messenger);
-		stateMachine = new StateMachine(splashState, playState);
-		menuState = new MenuState(messenger, this, stateMachine);
-		creditsState = new CreditsState(messenger, this);
-		highscoreState = new HighscoreState(messenger, this);
+		playState 		= new PlayState(messenger, eventManager, this);
+		splashState 	= new SplashState(messenger, this);
+		endState 		= new EndState(messenger);
+		stateMachine 	= new StateMachine(splashState, playState);
+		menuState 		= new MenuState(messenger, this, stateMachine);
+		creditsState 	= new CreditsState(messenger, this);
+		highscoreState 	= new HighscoreState(messenger, this);
 		
 		//add states
 		stateMachine.addState(menuState);
@@ -197,7 +195,7 @@ public class Core{
 		stateMachine.addState(highscoreState);
 		
 		//add transitions between game states
-		stateMachine.addTransition(splashState, "x", menuState);
+		stateMachine.addTransition(splashState, "m", menuState);
 		stateMachine.addTransition(menuState, "play", playState);
 		stateMachine.addTransition(menuState, "exit", endState);
 
@@ -205,6 +203,7 @@ public class Core{
 		stateMachine.addTransition(menuState, "credits", creditsState);
 		stateMachine.addTransition(playState, "m", menuState);
 		stateMachine.addTransition(playState, "q", endState);
+		stateMachine.addTransition(playState, "gameover", menuState);
 		stateMachine.addTransition(highscoreState, "m", menuState);
 		stateMachine.addTransition(creditsState, "m", menuState);
 		

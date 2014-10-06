@@ -2,6 +2,7 @@ package statemachine;
 
 import java.awt.Font;
 import java.awt.Graphics2D;
+
 import core.Core;
 import messenger.Messenger;
 
@@ -15,20 +16,22 @@ public class SplashState extends State {
 		this.messenger = messenger;
 		this.c = c;
 		
-		// text for splash screen
-		stringFont = new Font( "SansSerif", Font.PLAIN, 30 );
+		// text for screen
+		stringFont = new Font( "SansSerif", Font.PLAIN, 50 );
 	}
 
 	@Override
 	public void activate() {
-		System.out.println("SplashState activated");
 	}
 
 	@Override
 	public void deactivate() {
-		System.out.println("SplashState deactivated");
 	}
 
+	/**
+	 * sends message to messenger
+	 * @param msgType
+	 */
 	@Override
 	public void handle(String msgType) {
 		messenger.send(msgType);
@@ -45,10 +48,11 @@ public class SplashState extends State {
 		Graphics2D g = c.graphicsSystem.renderSystem.beginUpdate();
 		//clear background
 		g.clearRect(-c.graphicsSystem.width/2, -c.graphicsSystem.height/2, c.graphicsSystem.width, c.graphicsSystem.height);
-		
 		g.setFont(stringFont);
-		g.drawString("SPLASH SCREEN",0, 0);
-		g.drawString("Presse SPACE to continue.",0, 100);
+		g.drawString("ASTEROIDS",-150, -0);
+		g.setFont(new Font("SansSerif", Font.PLAIN, 20));
+		
+		g.drawString("Press 'm' to continue.",-100, 150);
 		
 		c.graphicsSystem.renderSystem.endUpdate();
 	}

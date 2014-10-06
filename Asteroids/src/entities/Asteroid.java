@@ -64,30 +64,26 @@ public class Asteroid extends Entity {
 		
 
 		switch(side){
-		//left edge
+		// asteroid coming from left edge
 		case 0:
-			//System.out.println("Asteroid von links");
 			x = screenXLeft;
 			y = (float) ((Math.random()* scrHeight) - scrHeight/2);
 			driftDir = (float) ((Math.random()*PI) - (PI/2));
 			break;
-		//lower edge
+		// asteroid coming from lower edge
 		case 1:
-//			System.out.println("Asteroid von unten");
 			x = (float) ((Math.random()*scrWidth) - scrWidth/2);
 			y = -(scrHeight/2);
 			driftDir = (float) ((Math.random()*PI));
 			break;
-		//right edge	
+		// asteroid coming from right edge	
 		case 2:
-//			System.out.println("Asteroid von rechts");
 			x = scrWidth/2;
 			y = (float) ((Math.random()*scrHeight) - scrHeight/2);
 			driftDir = (float) ((Math.random()*PI) + (PI/2));
 			break;
-		//upper edge
+		// asteroid coming from upper edge
 		case 3:
-//			System.out.println("Asteroid von oben");
 			x = (float) ((Math.random()*scrWidth) - scrWidth/2);
 			y = scrHeight/2;
 			driftDir = (float) ((Math.random()*PI) + PI);
@@ -107,7 +103,6 @@ public class Asteroid extends Entity {
 			super.updateCollider((float)super.getPosition().getX(), (float)super.getPosition().getY());
 		}
 		else{
-			//System.out.println("Asteroid zerstört");
 			state.collisionT.removeCollisionObj(getCollisionObject());
 			state.entityManager.removeEntity(this);
 		}
@@ -121,8 +116,6 @@ public class Asteroid extends Entity {
 		return !(x < (screenXLeft - radius) || x > (screenXRight + radius) || y < (screenYDown - radius)
 				|| y > (screenYUp + radius));
 	}
-
-
 
 	public void render(Graphics2D g){
 		super.render(g);

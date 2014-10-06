@@ -1,53 +1,53 @@
 package messenger;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import entities.Entity;
 
 /**
- * The messenger provides...
+ * The messenger provides a list with all actions that have to be executed during one game cycle.
  * @author Lisa
  *
  */
 public class Messenger {
 
-	// stores all function calls that have to be executed during the current game loop
+	// stores all function calls that have to be executed during one game loop
 	private ArrayList<Runnable> queue;
 	// maps function calls to a string message
-	Map<String, ArrayList<Runnable>> subscribers;
-	
+	private Map<String, ArrayList<Runnable>> subscribers;
 	
 	public Messenger(){
 		setUpLists();
 	}
 	
+	/**
+	 * creates a message queue and dictionary of subscribers
+	 */
 	private void setUpLists(){
 		subscribers = new HashMap<String, ArrayList<Runnable>>();
 		queue = new ArrayList<Runnable>();
 	}
 	
+	/**
+	 * adds a subscriber to a certain message
+	 * @param subscriber
+	 * @param msgType
+	 */
 	public void subscribe(Runnable subscriber, String msgType){
+		// messenger already contains a entry of message
 		if(subscribers.containsKey(msgType)){
+			// list of all subscribers of a certain message
 			ArrayList<Runnable> tmp = subscribers.get(msgType);
+			
+			// add subscriber to a message
 			tmp.add(subscriber);
 			subscribers.put(msgType, tmp);
 		} else {
-			ArrayList<Runnable> list = new ArrayList<Runnable>();
-			list.add(subscriber);
-			subscribers.put(msgType, list);
+			// create new message entry for subscriber
+			ArrayList<Runnable> tmp = new ArrayList<Runnable>();
+			tmp.add(subscriber);
+			subscribers.put(msgType, tmp);
 		}
-		// subscribers.put(msgType, subscriber);
-		// Object o = (Runnable) () -> { System.out.println("hi"); };	  // Legal because disambiguated
-		
-		// subscribers.get("name"); // returns "demo"
-//      JButton button2 = new JButton("Click me too!");     
-//      button2.addActionListener(e -> { System.out.println("Bye!"); });
-
 	}
 	
 	/**
@@ -65,6 +65,10 @@ public class Messenger {
 		return;
 	}
 	
+	/**
+	 * execute all subscribed method calls 
+	 * @param msgType
+	 */
 	public void fire(String msgType){
 		ArrayList<Runnable> subscribersOfMsg = subscribers.get(msgType);
 		if(subscribersOfMsg == null){
@@ -76,6 +80,10 @@ public class Messenger {
 		}
 	}
 	
+	/**
+	 * adds a 
+	 * @param msgType
+	 */
 	public void send(String msgType){
 		
 		Runnable foo = () -> { fire(msgType); };	  // Legal because disambiguated

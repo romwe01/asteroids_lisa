@@ -1,13 +1,16 @@
 package statemachine;
 
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.lang.reflect.Array;
 
 import core.Core;
 import messenger.Messenger;
 
+/**
+ * the menu
+ * @author Lisa
+ *
+ */
 public class MenuState extends State {
 	
 	public Messenger messenger;
@@ -15,9 +18,9 @@ public class MenuState extends State {
 	public StateMachine sm;
 	private Font stringFont;
 	private int heightOfSelected;
-	private int currPos;
-	private int height;
-	private int indent;
+	private int currPos;	// index of selected message in list
+	private int height;		// height of a menu item
+	private int indent;		// indent of a menu item
 	private String[] transitionMsg = { "play", "highscore", "credits", "exit" };
 	
 	public MenuState(Messenger messenger, Core c, StateMachine sm) {
@@ -27,26 +30,31 @@ public class MenuState extends State {
 		this.sm = sm;
 		this.height = 50;
 		this.indent = -50;
+		
 		// text styles
 		stringFont = new Font( "SansSerif", Font.PLAIN, 30 );
-		
 	}
 
+	/**
+	 * defines position next to selected menu item
+	 */
 	@Override
 	public void activate() {
-		System.out.println("MenuState activated");
 		this.heightOfSelected = -this.height + (this.currPos * this.height);
 	}
 
 	@Override
 	public void deactivate() {
-		System.out.println("MenuState deactivated");
 	}
 
+	/**
+	 * handles navigation through menu items
+	 * @param msgType
+	 */
 	@Override
 	public void handle(String msgType) {
 		
-		if(msgType == "down"){					// iterate through the menu items
+		if(msgType == "down"){					// iterate through menu items
 			if(this.currPos == (this.transitionMsg.length-1)){
 				this.currPos = 0;
 				this.heightOfSelected = -this.height;
@@ -54,9 +62,7 @@ public class MenuState extends State {
 				this.currPos++;
 				this.heightOfSelected += this.height;
 			}
-			
-			System.out.println("currPos " + this.currPos);
-		} else if (msgType == "up") {			// iterate through the menu items
+		} else if (msgType == "up") {			// iterate through menu items reversed
 			if(this.currPos == 0){
 				this.currPos = this.transitionMsg.length-1;
 				this.heightOfSelected = this.height*2;
@@ -64,14 +70,14 @@ public class MenuState extends State {
 				this.currPos--;
 				this.heightOfSelected -= this.height;
 			}
-			System.out.println("currPos " + this.currPos);
 		} else if (msgType == "enter"){			// transition to state of selected menu item
-			System.out.println("enter: currPos " + this.currPos);
-			System.out.println("transition: " + transitionMsg[this.currPos]);
 			sm.handle(transitionMsg[this.currPos]);
 		}
 	}
 
+	/**
+	 * updates the rendering
+	 */
 	@Override
 	public void update() {
 		render();
@@ -85,7 +91,7 @@ public class MenuState extends State {
 		g.clearRect(-c.graphicsSystem.width/2, -c.graphicsSystem.height/2, c.graphicsSystem.width, c.graphicsSystem.height);
 		
 		g.setFont(stringFont);
-		g.drawString("MENU",this.indent, -this.height*2);
+		g.drawString("MENU",this.indent, -this.height*3);
 		
 		// menu items
 		g.drawString("Play",this.indent, -this.height);
@@ -96,7 +102,9 @@ public class MenuState extends State {
 		// marker of selected menu item
 		g.drawString(">", this.indent-30, heightOfSelected);
 		
-		g.drawString("Press 'enter' to continue.",this.indent, this.height*4);
+		g.setFont(new Font("SansSerif", Font.PLAIN, 20));
+		g.drawString("Use arrow keys to change selection.",this.indent, this.height*4);
+		g.drawString("Press 'enter' to open menu item.",this.indent, (int) (this.height*4.5));
 		
 		c.graphicsSystem.renderSystem.endUpdate();
 	}

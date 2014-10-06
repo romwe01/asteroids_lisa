@@ -82,8 +82,7 @@ public class CollisionTester implements Updatable{
 		if ( ((player.center.getX() - col.center.getX() - col.radius/2.0)*(player.center.getX() - col.center.getX() - col.radius/2.0)) < ((player.radius/2.0f + col.radius/2.0f)*(player.radius/2.0f + col.radius/2.0f)) &&
 				((player.center.getY() - col.center.getY() - col.radius/2.0f)* (player.center.getY() - col.center.getY() - col.radius/2.0f)) < ((player.radius/2.0f + col.radius/2.0f)*(player.radius/2.0f + col.radius/2.0f)))
 		{
-			System.out.println("Collision with player");
-			return true;
+			return true;	// collision with player
 		}
 		return false;
 	}
@@ -97,8 +96,7 @@ public class CollisionTester implements Updatable{
 	private boolean checkCollisionBulletAsteroid(CircleCollider bullet, CircleCollider asteroid) {
 		if ( ((bullet.center.getX() - asteroid.center.getX() - asteroid.radius/2.0f) * (bullet.center.getX() - asteroid.center.getX() - asteroid.radius/2.0f)) < ((bullet.radius/2.0f + asteroid.radius/2.0f) * (bullet.radius/2.0f + asteroid.radius/2.0f))&&
 				((bullet.center.getY() - asteroid.center.getY() - asteroid.radius/2.0f) *(bullet.center.getY() - asteroid.center.getY() - asteroid.radius/2.0f)) < ((bullet.radius/2.0f + asteroid.radius/2.0f) *(bullet.radius/2.0f + asteroid.radius/2.0f)) ){
-			System.out.println("Collision with Asteroid");
-			return true;
+			return true;	// collision with asteroid
 		}
 		return false;
 	}
